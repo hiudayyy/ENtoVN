@@ -1,13 +1,10 @@
 workflows:
   flutter-ios:
-    name: Flutter iOS Build
+    name: Flutter iOS Build (Unsigned)
     environment:
       flutter: default
       xcode: latest
       cocoapods: default
-      vars:
-        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
-        XCODE_SCHEME: "Runner"
     scripts:
       - name: Get Flutter packages
         script: flutter pub get
@@ -15,11 +12,15 @@ workflows:
         script: |
           cd ios
           pod install
-      - name: Build ipa for distribution
+      - name: Build iOS App (Unsigned)
+        script: flutter build ios --release --no-codesign
+      - name: Package into unsigned IPA
         script: |
-          flutter build ipa --release
+          mkdir -p build/ios/ipa/Payload
+          # Copying the built .app into the Payload folder
+          cp -r build/ios/iphoneos/Runner.app build/ios/ipa/Payload/
+          cd build/ios/ipa
+          # Zipping it up into an .ipa file
+          zip -qr app_hiu_unsigned.ipa Payload
     artifacts:
-      - build/ios/ipa/*.ipa
-      - /tmp/xcodebuild_logs/*.log
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+      - build/ios/ipa/app_hiu_unsigned.ipa
