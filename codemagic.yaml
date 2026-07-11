@@ -1,12 +1,20 @@
 workflows:
-  ios-native:
+  flutter-ios:
+    name: Flutter iOS Build
     environment:
+      flutter: default
+      xcode: latest
+      cocoapods: default
       vars:
-        BUNDLE_ID: "io.codemagic.sample.iosnative"
-        XCODE_WORKSPACE: "CodemagicSample.xcworkspace"
-        XCODE_SCHEME: "CodemagicSample" # <-- Name of your Xcode scheme
+        XCODE_WORKSPACE: "ios/Runner.xcworkspace"
+        XCODE_SCHEME: "Runner"
     scripts:
-      # ...
+      - name: Get Flutter packages
+        script: flutter pub get
+      - name: Install iOS Pods
+        script: |
+          cd ios
+          pod install
       - name: Build ipa for distribution
         script: |
           xcode-project build-ipa \
