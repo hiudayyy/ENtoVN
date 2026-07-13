@@ -3,9 +3,10 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 import '../models/vocab_item.dart';
 import '../models/story_result.dart';
 import '../models/tense_quiz.dart';
+import '../core/secrets.dart';
 
 class AIService {
-  static const String _apiKey = 'AIzaSyAQwDvpa8gMEMG4DahNDCY3Kl0OL0pGTCg';
+  static const String _apiKey = Secrets.geminiApiKey;
 
   // Khởi tạo model Gemini 1.5 Flash (tối ưu tốc độ cho App)
   static final _model = GenerativeModel(

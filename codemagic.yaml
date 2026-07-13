@@ -2,10 +2,16 @@ workflows:
   flutter-ios:
     name: Flutter iOS Build (Unsigned)
     environment:
+      groups:
+        - gemini_credentials
       flutter: default
       xcode: latest
       cocoapods: default
     scripts:
+      - name: Generate secrets.dart from Environment Variable
+        script: |
+          mkdir -p lib/core
+          echo "class Secrets { static const String geminiApiKey = '$GEMINI_API_KEY'; }" > lib/core/secrets.dart
       - name: Get Flutter packages
         script: flutter pub get
       - name: Install iOS Pods
